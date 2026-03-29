@@ -1,4 +1,4 @@
-import { effect, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 
 import { Annotation } from '../models';
 import { StorageService } from './storage.service';
@@ -15,9 +15,7 @@ export class AnnotationService {
   );
 
   /** Изолируем аннотации */
-  get annotations(): Annotation[] {
-    return this._annotations()
-  };
+  annotations = computed<Annotation[]>(() => this._annotations());
 
   constructor() {
     // Автоматически записываем состояние в localStorage при каждом изменении сигнала.

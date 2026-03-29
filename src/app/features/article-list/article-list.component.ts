@@ -17,11 +17,11 @@ export class ArticleListComponent {
   private _annotationService = inject(AnnotationService);
 
   /** Текущий список статей. */
-  articles = this._articleService.articles;
+  articles = computed<Article[]>(() => this._articleService.articles());
   /** articleId → количество аннотаций. */
   annotationCountMap = computed(() => {
     const map = new Map<string, number>();
-    for (const ann of this._annotationService.annotations) {
+    for (const ann of this._annotationService.annotations()) {
       map.set(ann.articleId, (map.get(ann.articleId) ?? 0) + 1);
     }
     return map;

@@ -1,4 +1,4 @@
-import { effect, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 
 import { Article } from '../models';
 import { StorageService } from './storage.service';
@@ -15,9 +15,7 @@ export class ArticleService {
   );
 
   /** Изолируем статьи */
-  get articles(): Article[] {
-    return this._articles()
-  }
+  articles = computed<Article[]>(() => this._articles());
 
   constructor() {
     // Автоматически записываем состояние в localStorage при каждом изменении сигнала.

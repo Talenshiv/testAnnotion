@@ -1,7 +1,7 @@
 import { Component, computed, ElementRef, HostListener, inject, input, signal, viewChild, } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Annotation } from '@app/core';
+import { Annotation, Article } from '@app/core';
 import { AnnotationService, ArticleService } from '@app/core';
 import { buildTextSegments, getSelectionOffsets, TextSegment } from '@app/shared';
 import { PendingSelection, TooltipState } from '../models';
@@ -19,11 +19,12 @@ export class ArticleViewerComponent {
 
   /** Привязывается из параметра маршрута `:id`. */
   id = input.required<string>();
-  article = computed(() =>
-    this._articleService.articles.find((a) => a.id === this.id()),
+  article = computed<Article | undefined>(() =>
+    this._articleService.articles().find((a) => a.id === this.id()),
   );
-  annotations = computed(() =>
-    this._annotationService.annotations.filter((a) => a.articleId === this.id()),
+  /** Список аннотаций соответствующее id статьи */
+  annotations = computed<Annotation[]>(() =>
+    this._annotationService.annotations().filter((a) => a.articleId === this.id()),
   );
   /** Сегменты текста для рендеринга — пересчитываются при изменении статьи или аннотаций. */
   segments = computed<TextSegment[]>(() => {
@@ -34,9 +35,9 @@ export class ArticleViewerComponent {
   contentContainer = viewChild<ElementRef<HTMLDivElement>>('contentContainer');
   tooltip = signal<TooltipState | null>(null);
   pendingSelection = signal<PendingSelection | null>(null);
-  pendingColor = signal('#e74c3c');
-  pendingNote = signal('');
-  selectionError = signal('');
+  pendingColor = signal<string>('#e74c3c');
+  pendingNote = signal<string>('');
+  selectionError = signal<string>('');
 
   @HostListener('document:keydown.escape')
   onEscapeKey(): void {

@@ -4,7 +4,7 @@
     <a routerLink="/articles/new" class="btn btn-primary">+ Новая статья</a>
   </header>
 
-  @if (articles.length === 0) {
+  @if (articles().length === 0) {
     <div class="empty-state">
       <div class="empty-icon">📄</div>
       <h2 class="empty-heading">Нет еще созданных статей</h2>
@@ -13,7 +13,7 @@
     </div>
   } @else {
     <ul class="article-list">
-      @for (article of articles; track article.id) {
+      @for (article of articles(); track article.id) {
         <li class="article-card" (click)="viewArticle(article.id)">
           <div class="article-card-body">
             <div class="article-card-top">
