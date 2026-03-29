@@ -1,0 +1,48 @@
+<div class="editor-page">
+  <header class="editor-header">
+    <button type="button" class="btn btn-ghost" (click)="cancel()">← Отменить</button>
+    <h1 class="editor-title">{{ isEditMode() ? 'Редактировать Статью' : 'Новая Статья' }}</h1>
+  </header>
+
+  <form class="editor-form" [formGroup]="formService.form" (ngSubmit)="save()">
+    <div
+      class="field"
+      [class.field-error]="formService.titleControl.invalid && formService.titleControl.touched">
+      <label class="field-label" for="title">Заголовок</label>
+      <input
+        id="title"
+        type="text"
+        class="field-input"
+        placeholder="Введите название статьи"
+        formControlName="title"
+        autocomplete="off" />
+      @if (formService.titleControl.touched && formService.titleControl.hasError('required')) {
+        <span class="field-hint field-hint-error">Требуется название статьи.</span>
+      }
+      @if (formService.titleControl.touched && formService.titleControl.hasError('maxlength')) {
+        <span class="field-hint field-hint-error">Название статьи не должно превышать 200 символов.</span>
+      }
+    </div>
+
+    <div
+      class="field field-grow"
+      [class.field-error]="formService.contentControl.invalid && formService.contentControl.touched">
+      <label class="field-label" for="content">Cодержание</label>
+      <textarea
+        id="content"
+        class="field-textarea"
+        placeholder="Напишите вашу статью здесь..."
+        formControlName="content"></textarea>
+      @if (formService.contentControl.touched && formService.contentControl.hasError('required')) {
+        <span class="field-hint field-hint-error">Требуется содержание.</span>
+      }
+    </div>
+
+    <div class="editor-actions">
+      <button type="button" class="btn btn-ghost" (click)="cancel()">Отмена</button>
+      <button type="submit" class="btn btn-primary">
+        {{ isEditMode() ? 'Сохранить изменения' : 'Новая Статья' }}
+      </button>
+    </div>
+  </form>
+</div>

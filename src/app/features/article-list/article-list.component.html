@@ -1,0 +1,40 @@
+<div class="list-page">
+  <header class="list-header">
+    <h1 class="list-title">Статьи</h1>
+    <a routerLink="/articles/new" class="btn btn-primary">+ Новая статья</a>
+  </header>
+
+  @if (articles.length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">📄</div>
+      <h2 class="empty-heading">Нет еще созданных статей</h2>
+      <p class="empty-desc">Создайте свою первую статью, чтобы начать.</p>
+      <a routerLink="/articles/new" class="btn btn-primary">Создать статью</a>
+    </div>
+  } @else {
+    <ul class="article-list">
+      @for (article of articles; track article.id) {
+        <li class="article-card" (click)="viewArticle(article.id)">
+          <div class="article-card-body">
+            <div class="article-card-top">
+              <h2 class="article-card-title">{{ article.title }}</h2>
+              @if (getAnnotationCount(article.id) > 0) {
+                <span class="annotation-badge">
+                  {{ getAnnotationCount(article.id) }}
+                  {{ getAnnotationCount(article.id) === 1 ? 'annotation' : 'annotations' }}
+                </span>
+              }
+            </div>
+            <p class="article-card-preview">{{ getPreview(article.content) }}</p>
+            <span class="article-card-date">Обновлено {{ formatDate(article.updatedAt) }}</span>
+          </div>
+          <div class="article-card-actions" (click)="$event.stopPropagation()">
+            <button class="btn btn-ghost btn-sm" (click)="viewArticle(article.id)">Просмотреть</button>
+            <button class="btn btn-ghost btn-sm" (click)="editArticle(article.id, $event)">Редактировать</button>
+            <button class="btn btn-danger btn-sm" (click)="deleteArticle(article, $event)">Удалить</button>
+          </div>
+        </li>
+      }
+    </ul>
+  }
+</div>
