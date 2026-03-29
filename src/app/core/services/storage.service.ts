@@ -18,9 +18,4 @@ export class StorageService {
   set<T>(key: string, value: T): void {
     localStorage.setItem(key, JSON.stringify(value));
   }
-
-  /** Удаляет запись по ключу. */
-  remove(key: string): void {
-    localStorage.removeItem(key);
-  }
 }
