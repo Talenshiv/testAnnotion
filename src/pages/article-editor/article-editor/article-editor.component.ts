@@ -18,15 +18,26 @@ import { ArticleEditorFormService } from '../services';
 export class ArticleEditorComponent implements OnInit {
   private _router = inject(Router);
   private _articleService = inject(ArticleService);
+  private _formService = inject(ArticleEditorFormService);
 
   /** Привязывается из параметра маршрута `:id` через `withComponentInputBinding()`. */
   id = input<string | undefined>(undefined);
   /** `true` в режиме редактирования, `false` при создании новой статьи. */
   isEditMode = computed(() => !!this.id());
 
-  /** Сервис формы доступен в шаблоне напрямую для привязки к `[formGroup]`. */
-  formService = inject(ArticleEditorFormService);
+  /** Реактивная форма статьи. */
+  form = this._formService.form;
+  /** Контрол поля «Заголовок». */
+  titleControl = this._formService.titleControl;
+  /** Контрол поля «Содержание». */
+  contentControl = this._formService.contentControl;
 
+  /** Флаг валидации формы */
+  get fieldError(): boolean {
+    return this.titleControl.invalid && this.titleControl.touched;
+  }
+
+  /** @inheritDoc */
   ngOnInit(): void {
     const id = this.id();
     if (!id) return;
@@ -37,17 +48,17 @@ export class ArticleEditorComponent implements OnInit {
       this._router.navigate(['/articles']);
       return;
     }
-    this.formService.fill(article);
+    this._formService.fill(article);
   }
 
   /** Сохраняет статью (создаёт или обновляет) и переходит к ней. При невалидной форме показывает ошибки. */
   save(): void {
-    if (!this.formService.form.valid) {
-      this.formService.markAllAsTouched();
+    if (!this._formService.form.valid) {
+      this._formService.markAllAsTouched();
       return;
     }
 
-    const {title, content} = this.formService.getValue();
+    const {title, content} = this._formService.getValue();
     const id = this.id();
 
     if (id) {

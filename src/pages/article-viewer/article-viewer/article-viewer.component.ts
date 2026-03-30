@@ -33,12 +33,18 @@ export class ArticleViewerComponent {
   });
   /** Ссылка на контейнер контента — начало координат для Range API. */
   contentContainer = viewChild<ElementRef<HTMLDivElement>>('contentContainer');
+  /** Тултип. */
   tooltip = signal<TooltipState | null>(null);
+  /** Временное выделение перед подтверждением. */
   pendingSelection = signal<PendingSelection | null>(null);
+  /** Цвет текущего выделения. */
   pendingColor = signal<string>('#e74c3c');
+  /** Заметка к выделению. */
   pendingNote = signal<string>('');
+  /** Ошибка при создании выделения. */
   selectionError = signal<string>('');
 
+  /** @inheritDoc */
   @HostListener('document:keydown.escape')
   onEscapeKey(): void {
     if (this.pendingSelection()) {
