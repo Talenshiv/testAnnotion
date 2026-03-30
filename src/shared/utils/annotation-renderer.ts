@@ -1,4 +1,4 @@
-import { Annotation } from '../../core/models';
+import { Annotation } from '../../entities/models';
 
 /** Фрагмент текста статьи — аннотированный или обычный. */
 export interface TextSegment {

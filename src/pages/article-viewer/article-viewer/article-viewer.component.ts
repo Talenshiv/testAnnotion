@@ -1,9 +1,9 @@
 import { Component, computed, ElementRef, HostListener, inject, input, signal, viewChild, } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Annotation, Article } from '@app/core';
-import { AnnotationService, ArticleService } from '@app/core';
-import { buildTextSegments, getSelectionOffsets, TextSegment } from '@app/shared';
+import { Annotation, Article } from '@entities';
+import { AnnotationService, ArticleService } from '@entities';
+import { buildTextSegments, getSelectionOffsets, TextSegment } from '@shared';
 import { PendingSelection, TooltipState } from '../models';
 
 /** Страница просмотра статьи: рендер аннотированных сегментов, создание/удаление аннотаций, тултип. */

@@ -1,7 +1,7 @@
 import { Component, computed, inject, input, OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ArticleService } from '@app/core';
+import { ArticleService } from '@entities';
 import { ArticleEditorFormService } from '../services';
 
 

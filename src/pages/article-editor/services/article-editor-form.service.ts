@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { Article } from '@app/core';
+import { Article } from '@entities';
 import { ArticleFormValue } from '../models';
 
 /** Реактивная форма для создания и редактирования статьи. */

@@ -1,8 +1,8 @@
 import { Component, computed, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
-import { Article } from '../../core/models';
-import { AnnotationService, ArticleService } from '../../core/services';
+import { Article } from '../../entities';
+import { AnnotationService, ArticleService } from '../../entities';
 
 /** Список статей с кратким превью и счётчиком аннотаций. */
 @Component({

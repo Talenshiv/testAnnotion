@@ -9,22 +9,22 @@ export const routes: Routes = [
   {
     path: 'articles',
     loadComponent: () =>
-      import('./features').then((m) => m.ArticleListComponent),
+      import('../pages').then((m) => m.ArticleListComponent),
   },
   {
     path: 'articles/new',
     loadComponent: () =>
-      import('./features').then((m) => m.ArticleEditorComponent),
+      import('../pages').then((m) => m.ArticleEditorComponent),
   },
   {
     path: 'articles/:id/edit',
     loadComponent: () =>
-      import('./features').then((m) => m.ArticleEditorComponent),
+      import('../pages').then((m) => m.ArticleEditorComponent),
   },
   {
     path: 'articles/:id',
     loadComponent: () =>
-      import('./features').then((m) => m.ArticleViewerComponent),
+      import('../pages').then((m) => m.ArticleViewerComponent),
   },
   {
     path: '**',
