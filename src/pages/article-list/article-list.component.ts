@@ -1,8 +1,8 @@
 import { Component, computed, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
-import { Article } from '../../entities';
-import { AnnotationService, ArticleService } from '../../entities';
+import { Article } from '@entities';
+import { AnnotationService, ArticleService } from '@entities';
 
 /** Список статей с кратким превью и счётчиком аннотаций. */
 @Component({
@@ -53,15 +53,13 @@ export class ArticleListComponent {
   }
 
   /** Переходит на страницу редактирования статьи. */
-  editArticle(id: string, event: MouseEvent): void {
-    event.stopPropagation();
+  editArticle(id: string): void {
     this._router.navigate(['/articles', id, 'edit']);
   }
 
   /** Удаляет статью и все её аннотации после подтверждения. */
-  deleteArticle(article: Article, event: MouseEvent): void {
-    event.stopPropagation();
-    if (!confirm(`Delete article "${article.title}"?`)) return;
+  deleteArticle(article: Article): void {
+    if (!confirm(`Удалить статью "${article.title}"?`)) return;
     this._annotationService.deleteByArticleId(article.id);
     this._articleService.delete(article.id);
   }

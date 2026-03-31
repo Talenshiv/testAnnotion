@@ -13,18 +13,20 @@
     <div class="viewer-body">
       <section class="content-section">
         <div
+          appTextSelection
           class="article-content"
-          #contentContainer
-          (mouseup)="onTextMouseUp()">
+          (selectionMade)="onSelectionMade($event)">
           @for (segment of segments(); track $index) {
             @if (segment.annotation; as ann) {
               <span
+                appAnnotationHover
                 class="annotated"
                 [attr.data-start]="segment.startOffset"
                 [style.border-bottom-color]="ann.color"
                 [style.background-color]="getAnnotationBg(ann.color)"
-                (mouseenter)="showTooltip($event, ann)"
-                (mouseleave)="hideTooltip()">{{ segment.text }}</span>
+                [annotation]="ann"
+                (tooltipShow)="tooltip.set($event)"
+                (tooltipHide)="tooltip.set(null)">{{ segment.text }}</span>
             } @else {
               <span [attr.data-start]="segment.startOffset">{{ segment.text }}</span>
             }
@@ -35,7 +37,7 @@
       @if (annotations().length > 0) {
         <app-annotations-sidebar
           [annotations]="annotations()"
-          (deleted)="deleteAnnotation($event)" />
+          (deleted)="deleteAnnotation($event)"/>
       }
     </div>
   </div>
@@ -55,9 +57,9 @@
     (save)="saveAnnotation()"
     (cancel)="cancelAnnotation()"
     (colorChange)="pendingColor.set($event)"
-    (noteChange)="pendingNote.set($event)" />
+    (noteChange)="pendingNote.set($event)"/>
 }
 
 @if (tooltip(); as tip) {
-  <app-annotation-tooltip [tooltip]="tip" />
+  <app-annotation-tooltip [tooltip]="tip"/>
 }

@@ -30,8 +30,8 @@
           </div>
           <div class="article-card-actions" (click)="$event.stopPropagation()">
             <button class="btn btn-ghost btn-sm" (click)="viewArticle(article.id)">Просмотреть</button>
-            <button class="btn btn-ghost btn-sm" (click)="editArticle(article.id, $event)">Редактировать</button>
-            <button class="btn btn-danger btn-sm" (click)="deleteArticle(article, $event)">Удалить</button>
+            <button class="btn btn-ghost btn-sm" (click)="editArticle(article.id)">Редактировать</button>
+            <button class="btn btn-danger btn-sm" (click)="deleteArticle(article)">Удалить</button>
           </div>
         </li>
       }

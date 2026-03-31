@@ -1,18 +1,18 @@
-import { Component, computed, ElementRef, HostListener, inject, input, signal, viewChild, } from '@angular/core';
+import { Component, computed, HostListener, inject, input, signal } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Annotation, Article } from '@entities';
-import { AnnotationService, ArticleService } from '@entities';
-import { buildTextSegments, getSelectionOffsets, TextSegment } from '../utils';
-import { PendingSelection, TooltipState } from '../models';
+import { Annotation, AnnotationService, Article, ArticleService } from '@entities';
 import { AnnotationPopupComponent } from '../components/annotation-popup';
-import { AnnotationsSidebarComponent } from '../components/annotations-sidebar';
 import { AnnotationTooltipComponent } from '../components/annotation-tooltip';
+import { AnnotationsSidebarComponent } from '../components/annotations-sidebar';
+import { AnnotationHoverDirective, TextSelectionDirective } from '../directives';
+import { PendingSelection, TooltipState } from '../models';
+import { buildTextSegments, TextSegment } from '../utils';
 
 /** Страница просмотра статьи: рендер аннотированных сегментов, создание/удаление аннотаций, тултип. */
 @Component({
   selector: 'app-article-viewer',
-  imports: [AnnotationPopupComponent, AnnotationsSidebarComponent, AnnotationTooltipComponent],
+  imports: [AnnotationPopupComponent, AnnotationsSidebarComponent, AnnotationTooltipComponent, TextSelectionDirective, AnnotationHoverDirective],
   templateUrl: './article-viewer.component.html',
   styleUrl: './article-viewer.component.scss',
 })
@@ -23,10 +23,11 @@ export class ArticleViewerComponent {
 
   /** Привязывается из параметра маршрута `:id`. */
   id = input.required<string>();
+  /** Статья соответствующая id. */
   article = computed<Article | undefined>(() =>
     this._articleService.articles().find((a) => a.id === this.id()),
   );
-  /** Список аннотаций соответствующее id статьи */
+  /** Список аннотаций соответствующее id статьи. */
   annotations = computed<Annotation[]>(() =>
     this._annotationService.annotations().filter((a) => a.articleId === this.id()),
   );
@@ -35,8 +36,6 @@ export class ArticleViewerComponent {
     const article = this.article();
     return article ? buildTextSegments(article.content, this.annotations()) : [];
   });
-  /** Ссылка на контейнер контента — начало координат для Range API. */
-  contentContainer = viewChild<ElementRef<HTMLDivElement>>('contentContainer');
   /** Тултип. */
   tooltip = signal<TooltipState | null>(null);
   /** Временное выделение перед подтверждением. */
@@ -56,52 +55,13 @@ export class ArticleViewerComponent {
     }
   }
 
-  /** Читает текущее выделение и открывает попап создания аннотации. */
-  onTextMouseUp(): void {
-    // Не открываем второй попап поверх существующего.
+  /** Открывает попап создания аннотации по результату из TextSelectionDirective. */
+  onSelectionMade(sel: PendingSelection): void {
     if (this.pendingSelection()) return;
-
-    const container = this.contentContainer()?.nativeElement;
-    if (!container) return;
-
-    const result = getSelectionOffsets(container);
-    if (!result) return;
-
     this.selectionError.set('');
     this.pendingColor.set('#e74c3c');
     this.pendingNote.set('');
-
-    // Прижимаем попап к краям viewport, чтобы он не выходил за пределы.
-    const popupWidth = 300;
-    const rawX = result.rect.left + result.rect.width / 2;
-    const x = Math.max(
-      popupWidth / 2 + 8,
-      Math.min(rawX, window.innerWidth - popupWidth / 2 - 8),
-    );
-
-    this.pendingSelection.set({
-      startOffset: result.start,
-      endOffset: result.end,
-      selectedText: result.selectedText,
-      x,
-      y: result.rect.bottom + 12,
-    });
-  }
-
-  /** Показывает тултип с заметкой над аннотированным фрагментом. */
-  showTooltip(event: MouseEvent, annotation: Annotation): void {
-    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
-    this.tooltip.set({
-      note: annotation.note,
-      color: annotation.color,
-      x: rect.left + rect.width / 2,
-      y: rect.top - 8,
-    });
-  }
-
-  /** Скрывает подсказку. */
-  hideTooltip(): void {
-    this.tooltip.set(null);
+    this.pendingSelection.set(sel);
   }
 
   /** Возвращает rgba-фон с opacity 0.15 для подсветки аннотированного фрагмента. */
