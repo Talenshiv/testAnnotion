@@ -1,0 +1,21 @@
+<aside class="annotations-sidebar">
+  <h3 class="sidebar-heading">
+    Заметки
+    <span class="sidebar-count">{{ annotations().length }}</span>
+  </h3>
+  <ul class="annotations-list">
+    @for (ann of annotations(); track ann.id) {
+      <li class="annotation-item">
+        <div class="ann-color-stripe" [style.background-color]="ann.color"></div>
+        <div class="ann-body">
+          <q class="ann-selected-text">{{ ann.selectedText }}</q>
+          <p class="ann-note">{{ ann.note }}</p>
+        </div>
+        <button
+          class="ann-delete-btn"
+          title="Delete annotation"
+          (click)="deleted.emit(ann.id)">✕</button>
+      </li>
+    }
+  </ul>
+</aside>

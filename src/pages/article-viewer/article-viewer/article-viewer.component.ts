@@ -3,12 +3,16 @@ import { Router } from '@angular/router';
 
 import { Annotation, Article } from '@entities';
 import { AnnotationService, ArticleService } from '@entities';
-import { buildTextSegments, getSelectionOffsets, TextSegment } from '@shared';
+import { buildTextSegments, getSelectionOffsets, TextSegment } from '../utils';
 import { PendingSelection, TooltipState } from '../models';
+import { AnnotationPopupComponent } from '../components/annotation-popup';
+import { AnnotationsSidebarComponent } from '../components/annotations-sidebar';
+import { AnnotationTooltipComponent } from '../components/annotation-tooltip';
 
 /** Страница просмотра статьи: рендер аннотированных сегментов, создание/удаление аннотаций, тултип. */
 @Component({
   selector: 'app-article-viewer',
+  imports: [AnnotationPopupComponent, AnnotationsSidebarComponent, AnnotationTooltipComponent],
   templateUrl: './article-viewer.component.html',
   styleUrl: './article-viewer.component.scss',
 })
@@ -106,14 +110,6 @@ export class ArticleViewerComponent {
     const g = parseInt(hex.slice(3, 5), 16);
     const b = parseInt(hex.slice(5, 7), 16);
     return `rgba(${r}, ${g}, ${b}, 0.15)`;
-  }
-
-  onColorChange(event: Event): void {
-    this.pendingColor.set((event.target as HTMLInputElement).value);
-  }
-
-  onNoteChange(event: Event): void {
-    this.pendingNote.set((event.target as HTMLTextAreaElement).value);
   }
 
   /** Валидирует и сохраняет аннотацию. Показывает ошибку при пустой заметке или пересечении диапазонов. */

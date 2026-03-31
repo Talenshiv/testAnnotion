@@ -1,0 +1,50 @@
+<div class="popup-backdrop" (click)="cancel.emit()"></div>
+<div
+  class="annotation-popup"
+  role="dialog"
+  aria-label="Create annotation"
+  [style.left.px]="selection().x"
+  [style.top.px]="selection().y"
+  (click)="$event.stopPropagation()">
+  <div class="popup-header">
+    <span class="popup-title">Новая заметка</span>
+    <button class="popup-close" (click)="cancel.emit()" aria-label="Закрыть">✕</button>
+  </div>
+
+  <div class="popup-body">
+    <q class="popup-selected-text">{{ selection().selectedText }}</q>
+
+    <div class="popup-field">
+      <label class="popup-label" for="ann-color">Цвет</label>
+      <div class="color-row">
+        <input
+          id="ann-color"
+          type="color"
+          class="color-picker"
+          [value]="color()"
+          (input)="onColorChange($event)" />
+        <span class="color-preview" [style.background-color]="color()"></span>
+      </div>
+    </div>
+
+    <div class="popup-field">
+      <label class="popup-label" for="ann-note">Заметка</label>
+      <textarea
+        id="ann-note"
+        class="popup-textarea"
+        placeholder="Add a note…"
+        rows="3"
+        [value]="note()"
+        (input)="onNoteChange($event)"></textarea>
+    </div>
+
+    @if (error()) {
+      <p class="popup-error">{{ error() }}</p>
+    }
+
+    <div class="popup-actions">
+      <button class="btn btn-ghost btn-sm" (click)="cancel.emit()">Отмена</button>
+      <button class="btn btn-primary btn-sm" (click)="save.emit()">Сохранить</button>
+    </div>
+  </div>
+</div>

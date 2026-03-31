@@ -11,7 +11,6 @@
 
     <p class="select-hint">Выделите текст для создания заметок</p>
     <div class="viewer-body">
-      <!-- Article content -->
       <section class="content-section">
         <div
           class="article-content"
@@ -33,30 +32,10 @@
         </div>
       </section>
 
-      <!-- Annotations sidebar -->
       @if (annotations().length > 0) {
-        <aside class="annotations-sidebar">
-          <h3 class="sidebar-heading">
-            Заметки
-            <span class="sidebar-count">{{ annotations().length }}</span>
-          </h3>
-          <ul class="annotations-list">
-            @for (ann of annotations(); track ann.id) {
-              <li class="annotation-item">
-                <div class="ann-color-stripe" [style.background-color]="ann.color"></div>
-                <div class="ann-body">
-                  <q class="ann-selected-text">{{ ann.selectedText }}</q>
-                  <p class="ann-note">{{ ann.note }}</p>
-                </div>
-                <button
-                  class="ann-delete-btn"
-                  title="Delete annotation"
-                  (click)="deleteAnnotation(ann.id)">✕</button>
-              </li>
-            }
-          </ul>
-        </aside>
-
+        <app-annotations-sidebar
+          [annotations]="annotations()"
+          (deleted)="deleteAnnotation($event)" />
       }
     </div>
   </div>
@@ -67,68 +46,18 @@
   </div>
 }
 
-<!-- Annotation creation popup  -->
 @if (pendingSelection(); as sel) {
-  <div class="popup-backdrop" (click)="cancelAnnotation()"></div>
-  <div
-    class="annotation-popup"
-    role="dialog"
-    aria-label="Create annotation"
-    [style.left.px]="sel.x"
-    [style.top.px]="sel.y"
-    (click)="$event.stopPropagation()">
-    <div class="popup-header">
-      <span class="popup-title">Новая заметка</span>
-      <button class="popup-close" (click)="cancelAnnotation()" aria-label="Закрыть">✕</button>
-    </div>
-
-    <div class="popup-body">
-      <q class="popup-selected-text">{{ sel.selectedText }}</q>
-
-      <div class="popup-field">
-        <label class="popup-label" for="ann-color">Цвет</label>
-        <div class="color-row">
-          <input
-            id="ann-color"
-            type="color"
-            class="color-picker"
-            [value]="pendingColor()"
-            (input)="onColorChange($event)" />
-          <span class="color-preview" [style.background-color]="pendingColor()"></span>
-        </div>
-      </div>
-
-      <div class="popup-field">
-        <label class="popup-label" for="ann-note">Заметка</label>
-        <textarea
-          id="ann-note"
-          class="popup-textarea"
-          placeholder="Add a note…"
-          rows="3"
-          [value]="pendingNote()"
-          (input)="onNoteChange($event)"></textarea>
-      </div>
-
-      @if (selectionError()) {
-        <p class="popup-error">{{ selectionError() }}</p>
-      }
-
-      <div class="popup-actions">
-        <button class="btn btn-ghost btn-sm" (click)="cancelAnnotation()">Отмена</button>
-        <button class="btn btn-primary btn-sm" (click)="saveAnnotation()">Сохранить</button>
-      </div>
-    </div>
-  </div>
+  <app-annotation-popup
+    [selection]="sel"
+    [color]="pendingColor()"
+    [note]="pendingNote()"
+    [error]="selectionError()"
+    (save)="saveAnnotation()"
+    (cancel)="cancelAnnotation()"
+    (colorChange)="pendingColor.set($event)"
+    (noteChange)="pendingNote.set($event)" />
 }
 
-<!-- Tooltip -->
 @if (tooltip(); as tip) {
-  <div
-    class="annotation-tooltip"
-    role="tooltip"
-    [style.left.px]="tip.x"
-    [style.top.px]="tip.y">
-    <span class="tooltip-dot" [style.background-color]="tip.color"></span>
-    <span class="tooltip-text">{{ tip.note }}</span>
-  </div>
+  <app-annotation-tooltip [tooltip]="tip" />
 }

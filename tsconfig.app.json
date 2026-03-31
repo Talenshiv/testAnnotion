@@ -8,7 +8,6 @@
     "baseUrl": ".",
     "paths": {
       "@entities": ["src/entities"],
-      "@shared": ["src/shared"],
       "@pages": ["src/pages"],
     }
   },

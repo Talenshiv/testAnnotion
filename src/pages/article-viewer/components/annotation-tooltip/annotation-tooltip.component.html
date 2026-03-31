@@ -1,0 +1,8 @@
+<div
+  class="annotation-tooltip"
+  role="tooltip"
+  [style.left.px]="tooltip().x"
+  [style.top.px]="tooltip().y">
+  <span class="tooltip-dot" [style.background-color]="tooltip().color"></span>
+  <span class="tooltip-text">{{ tooltip().note }}</span>
+</div>
